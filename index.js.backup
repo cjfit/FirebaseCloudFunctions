@@ -4,15 +4,15 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
 
-// listen for writes to therapists/{therapist***REMOVED***
+// listen for writes to therapists/{therapist}
 exports.triggerSearch = functions.firestore
-    .document("therapists/{therapist***REMOVED***")
+    .document("therapists/{therapist}")
     .onCreate((snap, context) => {
       // const biofull = snap.data();
       provider_name = context.params.therapist
       googleSearch(provider_name)
       return provider_name;
-    ***REMOVED***);
+    });
 
 
 
@@ -25,7 +25,7 @@ let url = "https://www.googleapis.com/customsearch/v1?key=AIzaSyDrk9PP_stEVayTVB
 
 
 
-let settings = { method: "Get" ***REMOVED***;
+let settings = { method: "Get" };
 
 fetch(url, settings)
     .then(res => res.json())
@@ -33,7 +33,7 @@ fetch(url, settings)
         // console.log(json)
         data = json
         addToDb(data)
-    ***REMOVED***);
+    });
 
     function addToDb(data) {
     
@@ -54,41 +54,41 @@ fetch(url, settings)
           isEmpty(data)
         ) {
           return false;
-        ***REMOVED***
+        }
       
         for (const key in data) {
           if (typeof data[key] != 'object' || data[key] == null) {
             // If there is at least one non-object item in the data then it cannot be collection.
             return false;
-          ***REMOVED***
-        ***REMOVED***
+          }
+        }
       
       
         //console.log(data)
         //console.log(path)
         return true;
-      ***REMOVED***
+      }
       
       // Checks if object is empty.
       function isEmpty(obj) {
         for(const key in obj) {
           if(obj.hasOwnProperty(key)) {
             return false;
-          ***REMOVED***
-        ***REMOVED***
+          }
+        }
         return true;
         
-      ***REMOVED***
+      }
 
       async function upload(data, path) {
         return await admin.firestore()
           // define root-level collection here
           .doc("/therapists/"+provider_name+"/"+"customsearchapi/"+path+"/")
           .set(data)
-          .then(() => console.log(`Document ${path.join('/')***REMOVED*** uploaded.`))
-          //.catch(() => console.error(`Could not write document ${path.join('/')***REMOVED***.`), console.log(error));
+          .then(() => console.log(`Document ${path.join('/')} uploaded.`))
+          //.catch(() => console.error(`Could not write document ${path.join('/')}.`), console.log(error));
       
-      ***REMOVED***
+      }
       
       /**
        *
@@ -100,7 +100,7 @@ fetch(url, settings)
           // console.log(data)
           // console.log(path)
           // console.log(path[0])
-          const documentData = Object.assign({***REMOVED***, data);
+          const documentData = Object.assign({}, data);
       
           for (const key in data) {
             // Resolve each collection and remove it from document data.
@@ -109,23 +109,23 @@ fetch(url, settings)
               delete documentData[key];
               // Resolve a colleciton.
               resolve(data[key], [...path, key]);
-            ***REMOVED***
-          ***REMOVED***
+            }
+          }
       
           // If document is empty then it means it only consisted of collections.
           if (!isEmpty(documentData)) {
             // Upload a document free of collections.
             //console.log(documentData)
             await upload(documentData, path);
-          ***REMOVED***
-        ***REMOVED*** 
+          }
+        } 
         else if (excluded_tokenize_paths.includes(path[0])) {
           console.log(data)
           // upload
           await upload(data, path);
           
       
-        ***REMOVED***
+        }
       
         
         else {
@@ -135,10 +135,10 @@ fetch(url, settings)
           for (const key in data) {
             // Resolve each collection.
             await resolve(data[key], [...path, key]);
-          ***REMOVED***
-        ***REMOVED***
-      ***REMOVED***
+          }
+        }
+      }
       
       resolve(data);
-      ***REMOVED***
-***REMOVED***
+      }
+}
