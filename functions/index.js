@@ -4,7 +4,7 @@ const { IamAuthenticator ***REMOVED*** = require('ibm-watson/auth');
 const naturalLanguageUnderstanding = new NaturalLanguageUnderstandingV1({
   version: '2021-08-01',
   authenticator: new IamAuthenticator({
-    apikey: '***REMOVED***',
+    apikey: 'PROCESS.ENV.API_KEY',
   ***REMOVED***),
   serviceUrl: 'https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/***REMOVED***',
 ***REMOVED***);
